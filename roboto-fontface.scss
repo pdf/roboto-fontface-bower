@@ -1,37 +1,52 @@
 $roboto-font-path: 'fonts' !default;
 
-@mixin roboto-font($type, $weight, $style: normal) {
+@function _roboto-str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + _roboto-str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@mixin roboto-font($family, $type, $weight, $style: normal) {
+    $prefix: _roboto-str-replace($family, ' ');
     @font-face {
-        font-family: 'Roboto';
-        src: url('#{$roboto-font-path}/Roboto-#{$type}.eot');
-        src: url('#{$roboto-font-path}/Roboto-#{$type}.eot?#iefix') format('embedded-opentype'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.woff2') format('woff2'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.woff') format('woff'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.ttf') format('truetype'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.svg#Roboto') format('svg');
+        font-family: '#{$family}';
+        src: url('#{$roboto-font-path}/#{$prefix}-#{$type}.eot');
+        src: url('#{$roboto-font-path}/#{$prefix}-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.woff2') format('woff2'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.woff') format('woff'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.ttf') format('truetype'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.svg##{$prefix}#{$type}') format('svg');
         font-weight: $weight;
         font-style: $style;
     }
 
     @font-face {
-        font-family: 'Roboto-#{$type}';
-        src: url('#{$roboto-font-path}/Roboto-#{$type}.eot');
-        src: url('#{$roboto-font-path}/Roboto-#{$type}.eot?#iefix') format('embedded-opentype'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.woff2') format('woff2'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.woff') format('woff'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.ttf') format('truetype'),
-             url('#{$roboto-font-path}/Roboto-#{$type}.svg#Roboto') format('svg');
+        font-family: '#{$family}-#{$type}';
+        src: url('#{$roboto-font-path}/#{$prefix}-#{$type}.eot');
+        src: url('#{$roboto-font-path}/#{$prefix}-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.woff2') format('woff2'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.woff') format('woff'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.ttf') format('truetype'),
+             url('#{$roboto-font-path}/#{$prefix}-#{$type}.svg##{$prefix}#{$type}') format('svg');
     }
 }
 
-@mixin roboto-font-pair($type, $weight) {
-    @include roboto-font($type, $weight);
-    @include roboto-font(#{$type}Italic, $weight, italic);
+@mixin roboto-font-pair($family, $type, $weight) {
+    @include roboto-font($family, $type, $weight);
+    @include roboto-font($family, #{$type}Italic, $weight, italic);
 }
 
-@include roboto-font-pair('Thin', 100);
-@include roboto-font-pair('Light', 300);
-@include roboto-font-pair('Regular', 400);
-@include roboto-font-pair('Medium', 500);
-@include roboto-font-pair('Bold', 700);
-@include roboto-font-pair('Black', 900);
+@include roboto-font-pair('Roboto', 'Thin', 100);
+@include roboto-font-pair('Roboto', 'Light', 300);
+@include roboto-font-pair('Roboto', 'Regular', 400);
+@include roboto-font-pair('Roboto', 'Medium', 500);
+@include roboto-font-pair('Roboto', 'Bold', 700);
+@include roboto-font-pair('Roboto', 'Black', 900);
+
+@include roboto-font-pair('Roboto Condensed', 'Light', 300);
+@include roboto-font-pair('Roboto Condensed', 'Regular', 400);
+@include roboto-font-pair('Roboto Condensed', 'Bold', 700);
